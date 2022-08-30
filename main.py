@@ -39,8 +39,8 @@ driver.get("https://map.naver.com")
 time.sleep(2)
 
 search_input = driver.find_element_by_xpath("/html/body/app/layout/div[3]/div[2]/shrinkable-layout/div/app-base/search-input-box/div/div[1]/div/input")
-search_input.send_keys(adress[4] + Keys.ENTER)
-# search_input.send_keys("경기도 고양시 일산동구 장항동 883번지 호수마을5단지아파트 121호" + Keys.ENTER)
+search_input.send_keys(adress[27] + Keys.ENTER)
+# search_input.send_keys("경기도 고양시 일산동구 마두동 898-7번지 " + Keys.ENTER)
 time.sleep(2)
 try:
     viewmore = driver.find_element_by_class_name("link_more").click()
@@ -79,7 +79,9 @@ while(1):
         print("error2: no hospital in the place")
         break
 
+
 time.sleep(2)
+
 # 화면3(true)
 # 이용 시간 + 전화번호 추출
 # 리뷰 여부 확인
@@ -101,13 +103,31 @@ try:
     if time_n_exist != None:
         time_exist = 0
         print(time_exist)
-        print("exception1: no operationg time")
+        print("case: no operationg time")
     
 except:
     print(time_exist)
 
+
+
+
 if time_exist == 1:
-    
+    driver.find_element_by_xpath('//*[@id="app-root"]/div/div/div/div[6]/div/div[1]/div/ul/li[3]/div/a').click()
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    time_text = soup.find_all(class_ = "nNPOq")
+    time_text = [tag.get_text() for tag in time_text]
+    print(time_text)
+    #soup 초기화 해야 오류 안나는 듯
+    soup = 0
+    time.sleep(1)
+
+
+try:
+    driver.find_element_by_xpath('//*[@id="app-root"]/div/div/div/div[5]/div/div/div/div/a[2]').click()
+    time.sleep(2)
+except:
+    print("case: no review")
+
 driver.close()
 
 # 화면4(true)
