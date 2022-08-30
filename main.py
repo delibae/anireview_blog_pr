@@ -1,6 +1,6 @@
 #1차 목표 
 # 셀레니움을 이용하여 네이버 리뷰 수집
-
+# to do: 주소 중복 검사 필요
 
 import sys    
 import os     
@@ -48,22 +48,36 @@ try:
 except:
     print("eror1: no place in the adress")
 
-driver.close()
+
 # 화면2
 # 동물병원 텍스트 찾기
-# true => 링크 클릭
-# false => pass
+# try => 링크 클릭
+# except => error code => pass
+
+try:
+    keyword = "동물병원"  
+    # foo 변수를 가진 요소를 찾으려면
+    hospital = driver.find_element_by_xpath("//div[.='" + keyword + "']")
+    for i in range(2):
+        hospital = hospital.find_element_by_xpath('..')
+    time.sleep(3)
+except:
+    print("error2: no anima hospital in the place")
+
+
 
 # 화면3(true)
 # 이용 시간 + 전화번호 추출
 # 리뷰 여부 확인
-# true
+# try
 # 방문자 리뷰 더보기 클릭
-# false
-# pass
+# except
+# error code => pass
+
 
 # 화면4(true)
 # 리뷰추출 ~ 더보기 클릭(더보기 클릭 없을 때까지 반복)
 
 
 #음...
+
