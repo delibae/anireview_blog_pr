@@ -62,7 +62,7 @@ try:
         hospital = hospital.find_element_by_xpath('..')
     time.sleep(3)
 except:
-    print("error2: no anima hospital in the place")
+    print("error2: no animal hospital in the place")
 
 
 
@@ -74,6 +74,7 @@ except:
 # except
 # error code => pass
 
+driver.close()
 
 # 화면4(true)
 # 리뷰추출 ~ 더보기 클릭(더보기 클릭 없을 때까지 반복)
