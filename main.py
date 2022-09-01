@@ -128,11 +128,12 @@ try:
 except:
     print("case: no review")
 
-driver.close()
+
+
 
 # 화면4(true)
 # 리뷰추출 ~ 더보기 클릭(더보기 클릭 없을 때까지 반복)
-
+driver.close()
 
 #음...
 
