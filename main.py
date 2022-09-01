@@ -17,6 +17,8 @@ import math
 
 import pandas as pd
 
+import csv 
+
 #path는 각자 컴퓨터에 맞게 변경 필요
 path_driver = "anireview_blog_pr\chromedriver.exe"
 path_data = r'anireview_blog_pr\data_a.xlsx'
@@ -34,153 +36,175 @@ driver = webdriver.Chrome(path_driver)
 # 네이버 지도 검색창
 # 경기도 동물병원현황 엑셀 소재지 지번주소 검색
 # 이주소의 장소 더보기 클릭
-
-driver.get("https://map.naver.com")
-time.sleep(2)
-
-search_input = driver.find_element_by_xpath("/html/body/app/layout/div[3]/div[2]/shrinkable-layout/div/app-base/search-input-box/div/div[1]/div/input")
-# search_input.send_keys(adress[27] + Keys.ENTER)
-search_input.send_keys("경기도 고양시 일산서구 주엽동 17번지 문촌마을10단지아파트 A동 106-3호" + Keys.ENTER)
-time.sleep(2)
-try:
-    viewmore = driver.find_element_by_class_name("link_more").click()
+hole_data = []
+count = 0
+for adress_roop in adress:
+    name_roop = name[count]
+    driver.get("https://map.naver.com")
     time.sleep(2)
-except:
-    print("eror1: no place in the adress")
-
-
-# 화면2
-# 페이지 넘기면서 동물병원 텍스트 찾기
-# try => 링크 클릭
-# except => error code => pass
-
-#to do: 건물에 있는 영업점의수가 많을때
-hospital_exist = 0
-while(1):
-    try:
-        keyword = "동물병원"  
-        # foo 변수를 가진 요소를 찾으려면
-        hospital = driver.find_element_by_xpath("//div[.='" + keyword + "']")
-        for i in range(2):
-            hospital = hospital.find_element_by_xpath('..')
-        hospital.click()
-        time.sleep(3)
-        
-        hospital_exist = 1
-        break
-    except:
-        print("case: this page doesn't contain hospital name")
-    try:
-        next_button = driver.find_element_by_class_name("btn_next")
-        next_button.click()
-        time.sleep(3)
-    except:
-        print("alert: page finish")
-        print("error2: no hospital in the place")
-        break
-
-
-time.sleep(2)
-
-# 화면3(true)
-# 이용 시간 + 전화번호 추출
-# 리뷰 여부 확인
-# try
-# 방문자 리뷰 더보기 클릭
-# except
-# error code => pass
-
-time_exist = 1
-try:
-    driver.switch_to.frame("entryIframe")
-except:
-    print("error3: iframe switch error")
-    time_exist = 0
-try:
-    
-    time_not_exist = "이용시간을 알려주세요."
-    time_n_exist = driver.find_element_by_xpath("//span[.='" + time_not_exist + "']")
-    if time_n_exist != None:
-        time_exist = 0
-        print(time_exist)
-        print("case: no operationg time")
-    
-except:
-    print(time_exist)
-
-try:
-    phone_number = driver.find_elements_by_class_name('dry01')[0].text 
-    print(phone_number)
-except:
-    print("error4: phone number error")
-
-
-
-if time_exist == 1:
-    driver.find_element_by_class_name('Sg7qM').click()
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-    time_text = soup.find_all(class_ = "nNPOq")
-    time_text = [tag.get_text() for tag in time_text]
-    print(time_text)
-    #soup 초기화 해야 오류 안나는 듯
-    soup = 0
-    time.sleep(1)
-
-
-try:
-    review_exist = driver.find_element_by_xpath("//span[.='" + "리뷰" + "']").find_element_by_xpath('..').click()
+    search_input = driver.find_element_by_xpath("/html/body/app/layout/div[3]/div[2]/shrinkable-layout/div/app-base/search-input-box/div/div[1]/div/input")
+    search_input.send_keys(adress_roop + Keys.ENTER)
+    # search_input.send_keys("경기도 고양시 일산서구 주엽동 17번지 문촌마을10단지아파트 A동 106-3호" + Keys.ENTER)
     time.sleep(2)
-except:
-    print("case: no review")
+    try:
+        viewmore = driver.find_element_by_class_name("link_more").click()
+        time.sleep(2)
+    except:
+        print("eror1: no place in the adress")
 
 
+    # 화면2
+    # 페이지 넘기면서 동물병원 텍스트 찾기
+    # try => 링크 클릭
+    # except => error code => pass
 
-
-
-
-# 화면4(true)
-# 리뷰추출 ~ 더보기 클릭(더보기 클릭 없을 때까지 반복)
-
-try:
-    review_all = []
-    review_grade = []
+    #to do: 건물에 있는 영업점의수가 많을때
+    hospital_exist = 0
     while(1):
         try:
-            driver.find_element_by_xpath("//a[.='" + "더보기" + "']").click()
-            time.sleep(2)
-        except:
-            print("case: no more review to expand")
+            keyword = "동물병원"  
+            # foo 변수를 가진 요소를 찾으려면
+            hospital = driver.find_element_by_xpath("//div[.='" + keyword + "']")
+            for i in range(2):
+                hospital = hospital.find_element_by_xpath('..')
+            hospital.click()
+            time.sleep(3)
+            
+            hospital_exist = 1
             break
-    expand_list = driver.find_elements_by_class_name('xHaT3')
-    count = 0
-    # print(expand_list)
-    for e in expand_list[count:]:
-        # print(e.text)
-        e.send_keys(Keys.ENTER)
-    count = len(expand_list)
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-    review_list = soup.find_all(class_ = "YeINN")
-    for r in review_list:
-        t = r.find(class_ = "ZZ4OK")
-        # print(t)
-        review_all.append(t.get_text())
-        try:
-            g = r.find(class_ = "sb8UA").find(class_ = "P1zUJ").find("em")
-            # print(g)
-            review_grade.append(g.get_text())
         except:
-            print("case: no grade")
-            review_grade.append(-1)
-    soup = 0
+            print("case: this page doesn't contain hospital name")
+        try:
+            next_button = driver.find_element_by_class_name("btn_next")
+            next_button.click()
+            time.sleep(3)
+        except:
+            print("alert: page finish")
+            print("error2: no hospital in the place")
+            break
 
-    print(review_all)
-    print(review_grade)
-except:
-    print("case: no review")
+
+    time.sleep(2)
+
+    # 화면3(true)
+    # 이용 시간 + 전화번호 추출
+    # 리뷰 여부 확인
+    # try
+    # 방문자 리뷰 더보기 클릭
+    # except
+    # error code => pass
+
+    time_exist = 1
+    try:
+        driver.switch_to.frame("entryIframe")
+    except:
+        print("error3: iframe switch error")
+        time_exist = 0
+    try:
+        
+        time_not_exist = "이용시간을 알려주세요."
+        time_n_exist = driver.find_element_by_xpath("//span[.='" + time_not_exist + "']")
+        if time_n_exist != None:
+            time_exist = 0
+            print(time_exist)
+            print("case: no operationg time")
+        
+    except:
+        print(time_exist)
+
+    try:
+        phone_number = driver.find_elements_by_class_name('dry01')[0].text 
+        print(phone_number)
+    except:
+        phone_number = -1
+        print("error4: phone number error")
+
+
+
+    if time_exist == 1:
+        driver.find_element_by_class_name('Sg7qM').click()
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        time_text = soup.find_all(class_ = "nNPOq")
+        time_text = [tag.get_text() for tag in time_text]
+        print(time_text)
+        #soup 초기화 해야 오류 안나는 듯
+        soup = 0
+        time.sleep(1)
+    else:
+        time_text = -1
+
+
+    try:
+        review_exist = driver.find_element_by_xpath("//span[.='" + "리뷰" + "']").find_element_by_xpath('..').click()
+        time.sleep(2)
+    except:
+        print("case: no review")
+
+
+
+
+
+
+    # 화면4(true)
+    # 리뷰추출 ~ 더보기 클릭(더보기 클릭 없을 때까지 반복)
+
+    try:
+        review_all = []
+        review_grade = []
+        while(1):
+            try:
+                driver.find_element_by_xpath("//a[.='" + "더보기" + "']").click()
+                time.sleep(2)
+            except:
+                print("case: no more review to expand")
+                break
+        expand_list = driver.find_elements_by_class_name('xHaT3')
+        count = 0
+        # print(expand_list)
+        for e in expand_list[count:]:
+            # print(e.text)
+            e.send_keys(Keys.ENTER)
+        count = len(expand_list)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        review_list = soup.find_all(class_ = "YeINN")
+        for r in review_list:
+            t = r.find(class_ = "ZZ4OK")
+            # print(t)
+            review_all.append(t.get_text())
+            try:
+                g = r.find(class_ = "sb8UA").find(class_ = "P1zUJ").find("em")
+                # print(g)
+                review_grade.append(g.get_text())
+            except:
+                print("case: no grade")
+                review_grade.append(-1)
+        soup = 0
+
+        print(review_all)
+        print(review_grade)
+    except:
+        review_all = [-1]
+        review_grade = [-1]
+        print("case: no review")
+
+    one_roop_data = [name_roop, adress_roop, phone_number, time_text, review_all, review_grade ]
+    count += 1
+    hole_data.append(one_roop_data)
+    print("=======================")
+    print(hole_data)
+    print("=======================")
+
+
+#csv 파일로 저장!
+fields = ["Name", "Adress", "Phone_num", "Operating_time","Review_txt","Review_grade"]
+with open('test.csv', 'w',newline='') as f: 
+      
+    # using csv.writer method from CSV package 
+    write = csv.writer(f) 
+      
+    write.writerow(fields) 
+    write.writerows(hole_data)
 
 driver.close()
 
-#음...
-
-
-print(len([0]))
+#끝!
