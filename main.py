@@ -18,8 +18,8 @@ import math
 import pandas as pd
 
 #path는 각자 컴퓨터에 맞게 변경 필요
-path_driver = "E:\python\data_collect\data_ml_pr\chromedriver.exe"
-path_data = r'E:\python\anireview_blog_pr\data_a.xlsx'
+path_driver = "anireview_blog_pr\chromedriver.exe"
+path_data = r'anireview_blog_pr\data_a.xlsx'
 data_pd = pd.read_excel(path_data)
 adress = data_pd['소재지지번주소'].values.tolist()
 name = data_pd['사업장명'].values.tolist()
@@ -145,29 +145,34 @@ try:
     review_all = []
     review_grade = []
     while(1):
-        expand_list = driver.find_elements_by_class_name('xHaT3')
-        for e in expand_list:
-            print(e)
-            e.send_keys(Keys.ENTER)
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-        review_list = soup.find_all(class_ = "YeINN")
-        for r in review_list:
-            t = r.find(class_ = "ZZ4OK")
-            print(t)
-            review_all.append(t.get_text())
-            try:
-                g = r.find(class_ = "sb8UA").find(class_ = "P1zUJ").find("em")
-                print(g)
-                review_grade.append(g.get_text())
-            except:
-                print("case: no grade")
-                review_grade.append(-1)
-        soup = 0
         try:
             driver.find_element_by_xpath("//a[.='" + "더보기" + "']").click()
+            time.sleep(2)
         except:
-            print("case: no more review")
+            print("case: no more review to expand")
             break
+    expand_list = driver.find_elements_by_class_name('xHaT3')
+    count = 0
+    # print(expand_list)
+    for e in expand_list[count:]:
+        # print(e.text)
+        e.send_keys(Keys.ENTER)
+    count = len(expand_list)
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    review_list = soup.find_all(class_ = "YeINN")
+    for r in review_list:
+        t = r.find(class_ = "ZZ4OK")
+        # print(t)
+        review_all.append(t.get_text())
+        try:
+            g = r.find(class_ = "sb8UA").find(class_ = "P1zUJ").find("em")
+            # print(g)
+            review_grade.append(g.get_text())
+        except:
+            print("case: no grade")
+            review_grade.append(-1)
+    soup = 0
+
     print(review_all)
     print(review_grade)
 except:
@@ -177,3 +182,5 @@ driver.close()
 
 #음...
 
+
+print(len([0]))
