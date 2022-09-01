@@ -199,7 +199,6 @@ for adress_roop in adress:
 fields = ["Name", "Adress", "Phone_num", "Operating_time","Review_txt","Review_grade"]
 with open('test.csv', 'w',newline='') as f: 
       
-    # using csv.writer method from CSV package 
     write = csv.writer(f) 
       
     write.writerow(fields) 
