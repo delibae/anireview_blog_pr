@@ -23,7 +23,7 @@ import csv
 path_driver = "anireview_blog_pr\chromedriver.exe"
 path_data = r'anireview_blog_pr\data_a.xlsx'
 data_pd = pd.read_excel(path_data)
-adress = data_pd['소재지지번주소'].values.tolist()
+address = data_pd['소재지지번주소'].values.tolist()
 name = data_pd['사업장명'].values.tolist()
 
 driver = webdriver.Chrome(path_driver)
@@ -37,21 +37,22 @@ driver = webdriver.Chrome(path_driver)
 # 경기도 동물병원현황 엑셀 소재지 지번주소 검색
 # 이주소의 장소 더보기 클릭
 hole_data = []
-count = 0
-for adress_roop in adress:
-    name_roop = name[count]
+count_progress = 0
+for address_roop in address[:11]:
+    
+    name_roop = name[count_progress]
     driver.get("https://map.naver.com")
     time.sleep(2)
     search_input = driver.find_element_by_xpath("/html/body/app/layout/div[3]/div[2]/shrinkable-layout/div/app-base/search-input-box/div/div[1]/div/input")
-    search_input.send_keys(adress_roop + Keys.ENTER)
+    search_input.send_keys(address_roop + Keys.ENTER)
     # search_input.send_keys("경기도 고양시 일산서구 주엽동 17번지 문촌마을10단지아파트 A동 106-3호" + Keys.ENTER)
     time.sleep(2)
     try:
         viewmore = driver.find_element_by_class_name("link_more").click()
         time.sleep(2)
     except:
-        print("eror1: no place in the adress")
-
+        # print("eror1: no place in the address")
+        pass
 
     # 화면2
     # 페이지 넘기면서 동물병원 텍스트 찾기
@@ -73,14 +74,15 @@ for adress_roop in adress:
             hospital_exist = 1
             break
         except:
-            print("case: this page doesn't contain hospital name")
+            # print("case: this page doesn't contain hospital name")
+            pass
         try:
             next_button = driver.find_element_by_class_name("btn_next")
             next_button.click()
             time.sleep(3)
         except:
-            print("alert: page finish")
-            print("error2: no hospital in the place")
+            # print("alert: page finish")
+            # print("error2: no hospital in the place")
             break
 
 
@@ -98,7 +100,7 @@ for adress_roop in adress:
     try:
         driver.switch_to.frame("entryIframe")
     except:
-        print("error3: iframe switch error")
+        # print("error3: iframe switch error")
         time_exist = 0
     try:
         
@@ -106,18 +108,19 @@ for adress_roop in adress:
         time_n_exist = driver.find_element_by_xpath("//span[.='" + time_not_exist + "']")
         if time_n_exist != None:
             time_exist = 0
-            print(time_exist)
-            print("case: no operationg time")
+            # print(time_exist)
+            # print("case: no operationg time")
         
     except:
-        print(time_exist)
+        # print(time_exist)
+        pass
 
     try:
         phone_number = driver.find_elements_by_class_name('dry01')[0].text 
-        print(phone_number)
+        # print(phone_number)
     except:
         phone_number = -1
-        print("error4: phone number error")
+        # print("error4: phone number error")
 
 
 
@@ -126,7 +129,7 @@ for adress_roop in adress:
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         time_text = soup.find_all(class_ = "nNPOq")
         time_text = [tag.get_text() for tag in time_text]
-        print(time_text)
+        # print(time_text)
         #soup 초기화 해야 오류 안나는 듯
         soup = 0
         time.sleep(1)
@@ -138,7 +141,8 @@ for adress_roop in adress:
         review_exist = driver.find_element_by_xpath("//span[.='" + "리뷰" + "']").find_element_by_xpath('..').click()
         time.sleep(2)
     except:
-        print("case: no review")
+        # print("case: no review")
+        pass
 
 
 
@@ -156,7 +160,7 @@ for adress_roop in adress:
                 driver.find_element_by_xpath("//a[.='" + "더보기" + "']").click()
                 time.sleep(2)
             except:
-                print("case: no more review to expand")
+                # print("case: no more review to expand")
                 break
         expand_list = driver.find_elements_by_class_name('xHaT3')
         count = 0
@@ -176,32 +180,32 @@ for adress_roop in adress:
                 # print(g)
                 review_grade.append(g.get_text())
             except:
-                print("case: no grade")
+                # print("case: no grade")
                 review_grade.append(-1)
         soup = 0
 
-        print(review_all)
-        print(review_grade)
+        # print(review_all)
+        # print(review_grade)
     except:
         review_all = [-1]
         review_grade = [-1]
-        print("case: no review")
+        # print("case: no review")
 
-    one_roop_data = [name_roop, adress_roop, phone_number, time_text, review_all, review_grade ]
-    count += 1
+    one_roop_data = [name_roop, address_roop, phone_number, time_text, review_all, review_grade ]
+    count_progress += 1
     hole_data.append(one_roop_data)
-    print("=======================")
-    print(hole_data)
-    print("=======================")
+    if (count_progress % 10) == 0:
+        print("========================")
+        print(f"{count_progress*100/len(address):.1f}%" )
+        print("========================")
 
 
 #csv에서 pickle로 변경: 3차원 데이터 타입이므로 형태까지 저장 필요 
-fields = ["Name", "Adress", "Phone_num", "Operating_time","Review_txt","Review_grade"]
+fields = ["Name", "Address", "Phone_num", "Operating_time","Review_txt","Review_grade"]
 
 df = pd.DataFrame(hole_data, columns= fields)
 
-print(type(df.loc[3][4]))
-print(df.loc[3][4][1])
+
 
 df.to_pickle("df.pkl")
 
