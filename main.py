@@ -79,13 +79,20 @@ for address_roop in address:
         try:
             next_button = driver.find_element_by_class_name("btn_next")
             next_button.click()
+            next_button = 0
             time.sleep(3)
         except:
             # print("alert: page finish")
             # print("error2: no hospital in the place")
             break
-
-
+        try:
+            next_button = driver.find_element_by_class_name("btn_next")
+            enabled_false = next_button.is_enabled()
+            if enabled_false == False:
+                # print("error: no hospital in the place")
+                break
+        except:
+            pass
     time.sleep(2)
 
     # 화면3(true)
@@ -198,15 +205,17 @@ for address_roop in address:
         print("========================")
         print(f"{count_progress*100/len(address):.1f}%" )
         print("========================")
+    if (count_progress % 5) == 0:
+        fields = ["Name", "Address", "Phone_num", "Operating_time","Review_txt","Review_grade"]
+        df = pd.DataFrame(hole_data, columns= fields)
+        df.to_pickle("df.pkl")
+        print("df.pkl updated")
 
 
 #csv에서 pickle로 변경: 3차원 데이터 타입이므로 형태까지 저장 필요 
+
 fields = ["Name", "Address", "Phone_num", "Operating_time","Review_txt","Review_grade"]
-
 df = pd.DataFrame(hole_data, columns= fields)
-
-
-
 df.to_pickle("df.pkl")
 
 #끝!
