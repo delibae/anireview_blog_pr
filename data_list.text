@@ -1,6 +1,7 @@
-name
-adress
-phone_number
-time_text
-review_all
-review_grade
+"Name", 
+"Address", 
+"Phone_num", 
+"Operating_time",
+"Review_txt",
+"Review_grade"
+
