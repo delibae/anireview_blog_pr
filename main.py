@@ -195,16 +195,15 @@ for adress_roop in adress:
     print("=======================")
 
 
-#csv 파일로 저장!
+#csv에서 pickle로 변경: 3차원 데이터 타입이므로 형태까지 저장 필요 
 fields = ["Name", "Adress", "Phone_num", "Operating_time","Review_txt","Review_grade"]
-with open('test.csv', 'w',newline='') as f: 
-      
-    write = csv.writer(f) 
-      
-    write.writerow(fields) 
-    write.writerows(hole_data)
 
-driver.close()
+df = pd.DataFrame(hole_data, columns= fields)
+
+print(type(df.loc[3][4]))
+print(df.loc[3][4][1])
+
+df.to_pickle("df.pkl")
 
 #끝!
 
