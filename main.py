@@ -23,7 +23,7 @@ import csv
 path_driver = "anireview_blog_pr\chromedriver.exe"
 path_data = r'anireview_blog_pr\data_new.xlsx'
 data_pd = pd.read_excel(path_data)
-address = data_pd['소재지지번주소'].values.tolist()
+address = data_pd['주소이름'].values.tolist()
 name = data_pd['사업장명'].values.tolist()
 
 driver = webdriver.Chrome(path_driver)
@@ -43,7 +43,7 @@ for address_roop in address:
     
     name_roop = name[count_progress]
     driver.get("https://map.naver.com")
-    time.sleep(2)
+    time.sleep(4)
     search_input = driver.find_element_by_xpath("/html/body/app/layout/div[3]/div[2]/shrinkable-layout/div/app-base/search-input-box/div/div[1]/div/input")
     search_input.send_keys(address_roop + Keys.ENTER)
     # search_input.send_keys("경기도 고양시 일산서구 주엽동 17번지 문촌마을10단지아파트 A동 106-3호" + Keys.ENTER)
@@ -151,6 +151,7 @@ for address_roop in address:
     except:
         # print("case: no review")
         pass
+
 
 
 
