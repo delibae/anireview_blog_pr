@@ -21,7 +21,7 @@ import csv
 
 #path는 각자 컴퓨터에 맞게 변경 필요
 path_driver = "anireview_blog_pr\chromedriver.exe"
-path_data = r'anireview_blog_pr\data_a.xlsx'
+path_data = r'anireview_blog_pr\data_new.xlsx'
 data_pd = pd.read_excel(path_data)
 address = data_pd['소재지지번주소'].values.tolist()
 name = data_pd['사업장명'].values.tolist()
@@ -38,6 +38,7 @@ driver = webdriver.Chrome(path_driver)
 # 이주소의 장소 더보기 클릭
 hole_data = []
 count_progress = 0
+print(address[755:759])
 for address_roop in address:
     
     name_roop = name[count_progress]
