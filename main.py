@@ -155,8 +155,6 @@ for address_roop in address:
 
 
 
-
-
     # 화면4(true)
     # 리뷰추출 ~ 더보기 클릭(더보기 클릭 없을 때까지 반복)
 
