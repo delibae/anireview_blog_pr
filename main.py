@@ -23,7 +23,7 @@ import csv
 path_driver = "anireview_blog_pr\chromedriver.exe"
 path_data = r'anireview_blog_pr\data_renew.xlsx'
 data_pd = pd.read_excel(path_data)
-address = data_pd['주소이름'].values.tolist()
+address = data_pd['소재지지번주소'].values.tolist()
 name = data_pd['사업장명'].values.tolist()
 
 driver = webdriver.Chrome(path_driver)
@@ -48,6 +48,11 @@ for address_roop in address:
     search_input.send_keys(address_roop + Keys.ENTER)
     # search_input.send_keys("경기도 고양시 일산서구 주엽동 17번지 문촌마을10단지아파트 A동 106-3호" + Keys.ENTER)
     time.sleep(2)
+    for i in range(10):
+        try:
+            driver.find_element_by_xpath('//*[@id="app-root"]/div/div/div/div[3]/a[2]').click()
+        except:
+            break
     try:
         viewmore = driver.find_element_by_class_name("link_more").click()
         time.sleep(2)
@@ -131,19 +136,20 @@ for address_roop in address:
         # print("error4: phone number error")
 
 
-
-    if time_exist == 1:
-        driver.find_element_by_class_name('Sg7qM').click()
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-        time_text = soup.find_all(class_ = "nNPOq")
-        time_text = [tag.get_text() for tag in time_text]
-        # print(time_text)
-        #soup 초기화 해야 오류 안나는 듯
-        soup = 0
-        time.sleep(1)
-    else:
-        time_text = -1
-
+    try:
+        if time_exist == 1:
+            driver.find_element_by_class_name('Sg7qM').click()
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            time_text = soup.find_all(class_ = "nNPOq")
+            time_text = [tag.get_text() for tag in time_text]
+            # print(time_text)
+            #soup 초기화 해야 오류 안나는 듯
+            soup = 0
+            time.sleep(1)
+        else:
+            time_text = -1
+    except:
+        print("error: time_exist error")
 
     try:
         review_exist = driver.find_element_by_xpath("//span[.='" + "리뷰" + "']").find_element_by_xpath('..').click()
