@@ -46,7 +46,7 @@ driver.get("https://map.naver.com")
 time.sleep(4)
 search_input = driver.find_element_by_xpath("/html/body/app/layout/div[3]/div[2]/shrinkable-layout/div/app-base/search-input-box/div/div[1]/div/input")
 # search_input.send_keys(address_roop + Keys.ENTER)
-search_input.send_keys("경기도 파주시 문발동 617-1 Dr.Mini 하늘다람쥐 전문병원" + Keys.ENTER)
+search_input.send_keys("경기도 광주시 곤지암읍 6-1번지 곤지암행복동물병원" + Keys.ENTER)
 time.sleep(3)
 try:
     viewmore = driver.find_element_by_class_name("link_more").click()
