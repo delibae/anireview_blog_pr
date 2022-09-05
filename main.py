@@ -21,7 +21,7 @@ import csv
 
 #path는 각자 컴퓨터에 맞게 변경 필요
 path_driver = "anireview_blog_pr\chromedriver.exe"
-path_data = r'anireview_blog_pr\excel_dat\data_renew.xlsx'
+path_data = r'anireview_blog_pr\excel_data\data_renew.xlsx'
 data_pd = pd.read_excel(path_data)
 address = data_pd['주소이름'].values.tolist()
 name = data_pd['사업장명'].values.tolist()
