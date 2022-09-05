@@ -38,7 +38,7 @@ driver = webdriver.Chrome(path_driver)
 # 이주소의 장소 더보기 클릭
 hole_data = []
 count_progress = 0
-print(address[755:759])
+
 for address_roop in address:
     
     name_roop = name[count_progress]
