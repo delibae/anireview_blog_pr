@@ -46,11 +46,11 @@ driver.get("https://map.naver.com")
 time.sleep(4)
 search_input = driver.find_element_by_xpath("/html/body/app/layout/div[3]/div[2]/shrinkable-layout/div/app-base/search-input-box/div/div[1]/div/input")
 # search_input.send_keys(address_roop + Keys.ENTER)
-search_input.send_keys("경기도 광주시 곤지암읍 6-1번지 곤지암행복동물병원" + Keys.ENTER)
+search_input.send_keys("경기도 가평군 청평면 청평중앙로 8, 경기동물병원" + Keys.ENTER)
 time.sleep(3)
 try:
     viewmore = driver.find_element_by_class_name("link_more").click()
-    time.sleep(2)
+    time.sleep(3)
 except:
     # print("eror1: no place in the address")
     pass
@@ -63,10 +63,26 @@ except:
 #to do: 건물에 있는 영업점의수가 많을때
 hospital_exist = 0
 while(1):
-    try:
-        keyword = "동물병원"  
-        # foo 변수를 가진 요소를 찾으려면
-        hospital = driver.find_element_by_xpath("//div[.='" + keyword + "']")
+    # try:
+    keyword = "동물병원"  
+    # foo 변수를 가진 요소를 찾으려면
+    hospital = driver.find_element_by_xpath("//div[.='" + keyword + "']")
+    # soup = BeautifulSoup(driver.page_source, 'html.parser')
+    # hospital_name = soup.find_all(class_ = 'search_title')
+    # soup = 0
+    hospital_name = [hospital_n.get_text() for hospital_n in hospital_name]
+    name_exist = 0
+    for i in hospital_name:
+        
+        
+        i_r = i.replace(" ","")
+        name_roop_r = name_roop.replace(" ","")
+        print(i_r)
+        print(name_roop_r)
+        if i_r == name_roop_r:
+            name_exist = 1
+    
+    if name_exist == 1:   
         for i in range(2):
             hospital = hospital.find_element_by_xpath('..')
         hospital.click()
@@ -74,26 +90,26 @@ while(1):
         
         hospital_exist = 1
         break
-    except:
-        print("case: this page doesn't contain hospital name")
-        pass
-    try:
-        next_button = driver.find_element_by_class_name("btn_next")
-        next_button.click()
-        next_button = 0
-        time.sleep(3)
-    except:
-        print("alert: page finish")
-        print("error2: no hospital in the place")
-        break
-    try:
-        next_button = driver.find_element_by_class_name("btn_next")
-        enabled_false = next_button.is_enabled()
-        if enabled_false == False:
-            print("error: no hospital in the place")
-            break
-    except:
-        pass
+    # except:
+    #     # print("case: this page doesn't contain hospital name")
+    #     pass
+    # try:
+    #     next_button = driver.find_element_by_class_name("btn_next")
+    #     next_button.click()
+    #     next_button = 0
+    #     time.sleep(3)
+    # except:
+    #     # print("alert: page finish")
+    #     # print("error2: no hospital in the place")
+    #     break
+    # try:
+    #     next_button = driver.find_element_by_class_name("btn_next")
+    #     enabled_false = next_button.is_enabled()
+    #     if enabled_false == False:
+    #         # print("error: no hospital in the place")
+    #         break
+    # except:
+    #     pass
 time.sleep(2)
 
 # 화면3(true)

@@ -38,10 +38,11 @@ driver = webdriver.Chrome(path_driver)
 # 이주소의 장소 더보기 클릭
 hole_data = []
 count_progress = 0
-
-for address_roop in address:
+start_index = 15
+for address_roop in address[start_index:]:
     
-    name_roop = name[count_progress]
+    name_roop = name[count_progress+start_index]
+    print(name_roop)
     driver.get("https://map.naver.com")
     time.sleep(4)
     search_input = driver.find_element_by_xpath("/html/body/app/layout/div[3]/div[2]/shrinkable-layout/div/app-base/search-input-box/div/div[1]/div/input")
@@ -69,16 +70,34 @@ for address_roop in address:
     hospital_exist = 0
     while(1):
         try:
-            keyword = "동물병원"  
-            # foo 변수를 가진 요소를 찾으려면
-            hospital = driver.find_element_by_xpath("//div[.='" + keyword + "']")
-            for i in range(2):
-                hospital = hospital.find_element_by_xpath('..')
-            hospital.click()
-            time.sleep(3)
             
-            hospital_exist = 1
-            break
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            hospital_name = soup.find_all(class_ = 'search_title')
+            hospital_name = [hospital_n.get_text() for hospital_n in hospital_name]
+            soup= 0
+            name_exist = 0
+            for i in hospital_name:
+                i_r = i.replace(" ","")
+                name_roop_r = name_roop.replace(" ","")
+                time.sleep(1)
+                # print(i_r)
+                # print(name_roop_r)
+                time.sleep(1)
+                if i_r == name_roop_r:
+                    name_exist = 1
+                    time.sleep(1)
+                    # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                    keyword = i 
+                    hospital = driver.find_element_by_xpath("//div[.='" + keyword + "']")
+            
+            if name_exist == 1:   
+                for i in range(2):
+                    hospital = hospital.find_element_by_xpath('..')
+                hospital.click()
+                time.sleep(3)
+                
+                hospital_exist = 1
+                break
         except:
             # print("case: this page doesn't contain hospital name")
             pass
