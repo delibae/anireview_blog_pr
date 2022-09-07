@@ -81,10 +81,10 @@ for address_roop in address[start_index:]:
             for i in hospital_name:
                 i_r = i.replace(" ","")
                 name_roop_r = name_roop.replace(" ","")
-                time.sleep(1)
+
                 # print(i_r)
                 # print(name_roop_r)
-                time.sleep(1)
+
                 try:
                     c = i_r.replace("동물병원", "")
                     print(1)
