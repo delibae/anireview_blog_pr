@@ -22,8 +22,8 @@ import csv
 from difflib import SequenceMatcher
 
 #path는 각자 컴퓨터에 맞게 변경 필요
-path_driver = "anireview_blog_pr\chromedriver.exe"
-path_data = r'anireview_blog_pr\excel_data\data_renew.xlsx'
+path_driver = "naver_review_crawling\chromedriver.exe"
+path_data = r'naver_review_crawling\excel_data\data_renew.xlsx'
 data_pd = pd.read_excel(path_data)
 address = data_pd['주소이름'].values.tolist()
 name = data_pd['사업장명'].values.tolist()
@@ -79,6 +79,8 @@ for address_roop in address[start_index:]:
             soup= 0
             name_exist = 0
             for i in hospital_name:
+                if '동물병원' not in i:
+                    continue
                 i_r = i.replace(" ","")
                 name_roop_r = name_roop.replace(" ","")
 
@@ -99,11 +101,23 @@ for address_roop in address[start_index:]:
                 if ratio >= 0.5:
                     name_exist = 1
                     keyword = i 
-                    hospital = driver.find_element_by_xpath("//div[.='" + keyword + "']")
+                    hospital = driver.find_elements_by_xpath("//div[.='" + keyword + "']")
+                    break
 
+            for i in hospital:
+                for j in range(2):
+                    i = i.find_element_by_xpath('..')
+                    # print("1")
+                try:
+                    i.click()
+                    time.sleep(3)
+                except:
+                    pass
+                    
             if name_exist == 1:   
-                for i in range(2):
+                for i in range(3):
                     hospital = hospital.find_element_by_xpath('..')
+                    # print(hospital)
                 hospital.click()
                 time.sleep(3)
                 
