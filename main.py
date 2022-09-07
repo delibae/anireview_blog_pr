@@ -40,7 +40,7 @@ driver = webdriver.Chrome(path_driver)
 # 이주소의 장소 더보기 클릭
 hole_data = []
 count_progress = 0
-start_index = 15
+start_index = 0
 for address_roop in address[start_index:]:
     
     name_roop = name[count_progress+start_index]
@@ -87,23 +87,17 @@ for address_roop in address[start_index:]:
 
                 try:
                     c = i_r.replace("동물병원", "")
-                    print(1)
                 except:
                     c = i_r
-                    print(2)
                 try:
                     d = name_roop_r.replace("동물병원","")
-                    print(3)
                 except:
                     d = name_roop_r
-                    print(4)
                 
                 ratio = SequenceMatcher(None, c, d).ratio()
                 
                 if ratio >= 0.5:
                     name_exist = 1
-                    time.sleep(1)
-                    # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     keyword = i 
                     hospital = driver.find_element_by_xpath("//div[.='" + keyword + "']")
 
@@ -121,8 +115,9 @@ for address_roop in address[start_index:]:
         try:
             next_button = driver.find_element_by_class_name("btn_next")
             next_button.click()
+
             next_button = 0
-            time.sleep(3)
+            time.sleep(2)
         except:
             # print("alert: page finish")
             # print("error2: no hospital in the place")
@@ -264,3 +259,4 @@ df.to_pickle("df.pkl")
 
 #네이버 리뷰 특징: 별점 낮은 순 보기 기능 x / 안 좋은 리뷰에는 의사 답글이 달려있음 (이런 리뷰들과 답글이 중요 데이터 인듯 향후 의사 답변 데이터 수집도 필요할듯)
 #그리고 네이버리뷰는 최근에 별점 기능을 제거함
+
