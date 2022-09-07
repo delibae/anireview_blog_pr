@@ -19,6 +19,8 @@ import pandas as pd
 
 import csv 
 
+from difflib import SequenceMatcher
+
 #path는 각자 컴퓨터에 맞게 변경 필요
 path_driver = "anireview_blog_pr\chromedriver.exe"
 path_data = r'anireview_blog_pr\excel_data\data_renew.xlsx'
@@ -83,13 +85,28 @@ for address_roop in address[start_index:]:
                 # print(i_r)
                 # print(name_roop_r)
                 time.sleep(1)
-                if i_r == name_roop_r:
+                try:
+                    c = i_r.replace("동물병원", "")
+                    print(1)
+                except:
+                    c = i_r
+                    print(2)
+                try:
+                    d = name_roop_r.replace("동물병원","")
+                    print(3)
+                except:
+                    d = name_roop_r
+                    print(4)
+                
+                ratio = SequenceMatcher(None, c, d).ratio()
+                
+                if ratio >= 0.5:
                     name_exist = 1
                     time.sleep(1)
                     # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     keyword = i 
                     hospital = driver.find_element_by_xpath("//div[.='" + keyword + "']")
-            
+
             if name_exist == 1:   
                 for i in range(2):
                     hospital = hospital.find_element_by_xpath('..')
