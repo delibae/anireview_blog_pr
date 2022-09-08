@@ -19,14 +19,18 @@ for i in text:
     t = np.array(i)
     t.reshape(-1,1)
     hole = np.append(hole, t)
-print(hole.shape) 
-# for i in text:
-#     l = [0 for j in range(2500)]
 
-# df_output = pd.DataFrame()
+hl = hole.tolist()
 
-# for i in range(len(text)):
-#     df_output[i] = pd.Series(text[i])
-# df_output.to_excel('./output.xlsx')
+df = pd.DataFrame(columns=["Name","Review"])
 
-# py = np.array()
+df['Review'] = hole
+print(df)
+
+count = 0
+for i in range(len(text)):
+    df.loc[count,'Name'] = name[i]
+    l = len(text[i])
+    count += l
+
+df.to_excel('./naver_review_crawling/excel_data/ml_data.xlsx')
