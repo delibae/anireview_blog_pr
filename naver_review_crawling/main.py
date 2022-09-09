@@ -267,7 +267,7 @@ for address_roop in address[start_index:]:
 
 fields = ["Name", "Address", "Phone_num", "Operating_time","Review_txt","Review_grade"]
 df = pd.DataFrame(hole_data, columns= fields)
-df.to_pickle("df.pkl")
+df.to_pickle("./naver_review_crawling/ml_data/df.pkl")
 
 #끝!
 

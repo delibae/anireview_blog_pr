@@ -29,8 +29,12 @@ print(df)
 
 count = 0
 for i in range(len(text)):
-    df.loc[count,'Name'] = name[i]
     l = len(text[i])
+    if l == 0:
+        pass
+    else:
+        df.loc[count,'Name'] = name[i]
+
     count += l
 
 df.to_excel('./naver_review_crawling/excel_data/ml_data.xlsx')
