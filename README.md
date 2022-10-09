@@ -23,6 +23,7 @@ non
 
 ### To Do <br/>
 1. 단어 자체로 긍정 부정 판별은 잘하지만 '안' '아니'와 같은 부정형이 단어앞에 올 경우를 인식 잘 못함.
+2. 향후에 korean_bert model로 재학습 
 
 ### Recognized Error <br/>
 non
